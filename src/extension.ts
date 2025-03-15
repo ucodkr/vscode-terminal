@@ -7,9 +7,9 @@ export function activate (context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider('sshServers', sshTreeProvider);
 
 	// SSH 서버에 연결
-	context.subscriptions.push(vscode.commands.registerCommand('extension.openSshInEditor', async (server) => {
+	context.subscriptions.push(vscode.commands.registerCommand('extension.openSSH', async (server) => {
 		const terminal = vscode.window.createTerminal({
-			name: `SSH: ${server.name}`,
+			name: `${server.name}`,
 			location: vscode.TerminalLocation.Editor
 		});
 

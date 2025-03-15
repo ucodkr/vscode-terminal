@@ -19,7 +19,7 @@
       "activitybar": [
         {
           "id": "sshServers",
-          "title": "SSH",
+          "title": "Connection Manager",
           "icon": "resources/ssh.svg"
         }
       ]
@@ -33,6 +33,11 @@
       ]
     },
     "commands": [
+      {
+        "command": "extension.openSSH",
+        "title": "Open SSH",
+        "icon": "$(terminal)"
+      },
       {
         "command": "extension.addServer",
         "title": "Add SSH Server",
@@ -83,6 +88,11 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "extension.openSSH",
+          "when": "view == sshServers",
+          "group": "inline"
+        },
         {
           "command": "extension.removeServer",
           "when": "view == sshServers",

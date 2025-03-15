@@ -12,7 +12,7 @@ export class SSHTreeProvider implements vscode.TreeDataProvider<ServerItem> {
     getChildren (): ServerItem[] {
 
         const list = loadServers().map(server => new ServerItem(server.name, server.user, server.host));
-        console.log("Ser", list);
+
         return list;
     }
 
@@ -33,11 +33,11 @@ class ServerItem extends vscode.TreeItem {
             light: vscode.Uri.file('/resources/ssh-icon-light.svg'),
             dark: vscode.Uri.file('/resources/ssh-icon-dark.svg')
         }; // 아이콘 경로 설정
-        this.command = {
-            command: 'extension.openSshInEditor',
-            title: 'Connect to SSH',
-            arguments: [{ name, user, host }]
-        };
+        // this.command = {
+        //     command: 'extension.openSSH',
+        //     title: 'Connect to SSH',
+        //     arguments: [{ name, user, host }]
+        // };
     }
 }
 
