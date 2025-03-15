@@ -5,3 +5,5 @@ node_modules
 *.vsix
 .vscode-test.mjs
 .vscode
+server.json
+servers.json

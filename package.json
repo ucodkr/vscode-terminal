@@ -15,15 +15,88 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sshServers",
+          "title": "SSH",
+          "icon": "resources/ssh.svg"
+        }
+      ]
+    },
+    "views": {
+      "sshServers": [
+        {
+          "id": "sshServers",
+          "name": "SSH Servers"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "extension.showServerList",
-        "title": "Show SSH Servers"
+        "command": "extension.addServer",
+        "title": "Add SSH Server",
+        "icon": "$(add)"
       },
       {
-        "command": "extension.openSshTerminal",
-        "title": "Open SSH Terminal"
+        "command": "extension.refreshServers",
+        "title": "Reload Servers",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "extension.openServerList",
+        "title": "Open Server Config",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "extension.removeServer",
+        "title": "Remove SSH Server",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "extension.renameServer",
+        "title": "Rename SSH Server",
+        "icon": "$(edit)"
       }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "extension.addServer",
+          "when": "view == sshServers",
+          "group": "navigation"
+        },
+        {
+          "command": "extension.refreshServers",
+          "when": "view == sshServers",
+          "group": "navigation"
+        },
+        {
+          "command": "extension.openServerList",
+          "when": "view == sshServers",
+          "group": "navigation"
+        },
+        {
+          "command": "extension.openSettingsFile",
+          "when": "view == sshServers",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "extension.removeServer",
+          "when": "view == sshServers",
+          "group": "inline"
+        },
+        {
+          "command": "extension.renameServer",
+          "when": "view == sshServers",
+          "group": "inline"
+        }
+      ]
+    },
+    "activationEvents": [
+      "*"
     ]
   },
   "scripts": {

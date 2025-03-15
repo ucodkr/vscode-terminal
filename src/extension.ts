@@ -1,50 +1,54 @@
 import * as vscode from 'vscode';
-import * as cp from 'child_process';
+import { SSHTreeProvider } from './sshTreeView';
+import { addServer, loadServers, removeServer } from './serverData';
 
 export function activate (context: vscode.ExtensionContext) {
-	const sshServers = [
-		{ name: 'ucodkr', host: '192.168.1.251', user: 'ubuntu' },
-	];
-	const openTerminalInEditorCommand = vscode.commands.registerCommand('extension.openTerminalInEditor', async () => {
-		// Execute the command to open a terminal in the editor area
-		await vscode.commands.executeCommand('workbench.action.terminal.newInEditor');
-	});
+	const sshTreeProvider = new SSHTreeProvider();
+	vscode.window.registerTreeDataProvider('sshServers', sshTreeProvider);
 
-	// Command to open terminal and connect to an SSH server
-	const openTerminalCommand = vscode.commands.registerCommand('extension.openSshTerminal', async (server: { host: string, user: string, name: string }) => {
-		// Create terminal
+	// SSH 서버에 연결
+	context.subscriptions.push(vscode.commands.registerCommand('extension.openSshInEditor', async (server) => {
 		const terminal = vscode.window.createTerminal({
 			name: `SSH: ${server.name}`,
-			location: vscode.TerminalLocation.Editor // 🚀 본문 영역에서 터미널 실행
+			location: vscode.TerminalLocation.Editor
 		});
 
-		// Start SSH command
-		terminal.sendText(`ssh ${server.user}@${server.host}`);
-		vscode.window.showTextDocument(
-			vscode.Uri.parse(`vscode-terminal://${terminal.name}`),
-			{ viewColumn: vscode.ViewColumn.Active }
-		);
-		// Show terminal in editor area
 		terminal.show();
-	});
+		terminal.sendText(`ssh ${server.user}@${server.host}`);
+	}));
 
-	// Command to show a quick pick with server names
-	const showServerListCommand = vscode.commands.registerCommand('extension.showServerList', async () => {
+	// 서버 추가
+	context.subscriptions.push(vscode.commands.registerCommand('extension.addServer', async () => {
+		const name = await vscode.window.showInputBox({ prompt: 'Enter server name' });
+		const user = await vscode.window.showInputBox({ prompt: 'Enter SSH username' });
+		const host = await vscode.window.showInputBox({ prompt: 'Enter SSH host' });
 
-		const serverNames = sshServers.map(s => s.name);
-		const selectedServerName = await vscode.window.showQuickPick(serverNames, {
-			placeHolder: 'Select an SSH server to connect to',
-		});
-
-		if (!selectedServerName) return;
-
-		const selectedServer = sshServers.find(s => s.name === selectedServerName);
-		if (selectedServer) {
-			vscode.commands.executeCommand('extension.openSshTerminal', selectedServer);
+		if (name && user && host) {
+			addServer(name, user, host);
+			sshTreeProvider.refresh();
 		}
-	});
+	}));
 
-	context.subscriptions.push(openTerminalCommand, showServerListCommand);
+	// 서버 삭제
+	context.subscriptions.push(vscode.commands.registerCommand('extension.removeServer', async (server) => {
+		const confirm = await vscode.window.showWarningMessage(`Delete server ${server.name}?`, 'Yes', 'No');
+		if (confirm === 'Yes') {
+			removeServer(server.name);
+			sshTreeProvider.refresh();
+		}
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('extension.openSettingsFile', () => {
+		const settingsPath = vscode.Uri.file('/path/to/your/settings/file.json'); // 설정 파일 경로 수정
+		vscode.workspace.openTextDocument(settingsPath).then(doc => {
+			vscode.window.showTextDocument(doc);
+		});
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('extension.refreshServers', () => {
+		loadServers();  // 서버 목록 새로 고침
+	}));
+
+
 }
 
 export function deactivate () { }
