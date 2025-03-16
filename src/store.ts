@@ -5,7 +5,7 @@ import * as path from 'path';
 export const CONFIG_FILE = "ucod.connect.json";
 export const isDevelopment = process.env.NODE_ENV === 'development';
 export const getConfigFile = (context: vscode.ExtensionContext, filename: string) => {
-    const filePath = path.join(context.globalStorageUri.fsPath, filename);
+    const filePath = path.join(context.globalStorageUri.fsPath, "..", filename);
     if (!fs.existsSync(filePath)) {
         fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
         fs.writeFileSync(filePath, JSON.stringify([], null, 2));
