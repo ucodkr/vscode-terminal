@@ -1,22 +1,30 @@
 import * as vscode from 'vscode';
-import { loadServers, addServer, removeServer } from './serverData';
+import { loadServers, addServer, removeServer } from './store';
 
 export class SSHTreeProvider implements vscode.TreeDataProvider<ServerItem> {
+    private context: vscode.ExtensionContext;
+
     private _onDidChangeTreeData: vscode.EventEmitter<ServerItem | undefined | void> = new vscode.EventEmitter<ServerItem | undefined | void>();
+
     readonly onDidChangeTreeData: vscode.Event<ServerItem | undefined | void> = this._onDidChangeTreeData.event;
+
+    constructor(context: vscode.ExtensionContext) {
+        this.context = context;
+    }
+
 
     getTreeItem (element: ServerItem): vscode.TreeItem {
         return element;
     }
 
     getChildren (): ServerItem[] {
-
-        const list = loadServers().map(server => new ServerItem(server.name, server.user, server.host));
+        const list = loadServers(this.context).map(server => new ServerItem(server.name, server.connection));
 
         return list;
     }
 
     refresh (): void {
+        this.getChildren();
         this._onDidChangeTreeData.fire();
     }
 }
@@ -24,15 +32,12 @@ export class SSHTreeProvider implements vscode.TreeDataProvider<ServerItem> {
 class ServerItem extends vscode.TreeItem {
     constructor(
         public readonly name: string,
-        public readonly user: string,
-        public readonly host: string
+        public readonly connection: string,
+        public readonly children: vscode.TreeItem[] = []
     ) {
         super(name, vscode.TreeItemCollapsibleState.None);
         this.contextValue = 'server';  // 👈 각 서버가 "server"로 인식됨
-        this.iconPath = {
-            light: vscode.Uri.file('/resources/ssh-icon-light.svg'),
-            dark: vscode.Uri.file('/resources/ssh-icon-dark.svg')
-        }; // 아이콘 경로 설정
+        this.iconPath = new vscode.ThemeIcon('terminal');
         // this.command = {
         //     command: 'extension.openSSH',
         //     title: 'Connect to SSH',
@@ -49,9 +54,6 @@ class GroupItem extends vscode.TreeItem {
     ) {
         super(label, vscode.TreeItemCollapsibleState.Collapsed);
 
-        this.iconPath = {
-            light: vscode.Uri.file('/resources/group-icon-light.svg'),
-            dark: vscode.Uri.file('/resources/group-icon-dark.svg')
-        }; // 그룹 아이콘 설정
+        this.iconPath = new vscode.ThemeIcon('terminal');
     }
 }

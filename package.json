@@ -19,7 +19,7 @@
       "activitybar": [
         {
           "id": "sshServers",
-          "title": "Connection Manager",
+          "title": "ssh",
           "icon": "resources/ssh.svg"
         }
       ]
@@ -28,7 +28,7 @@
       "sshServers": [
         {
           "id": "sshServers",
-          "name": "SSH Servers"
+          "name": ""
         }
       ]
     },
@@ -49,7 +49,7 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "extension.openServerList",
+        "command": "extension.openConfigFile",
         "title": "Open Server Config",
         "icon": "$(folder-opened)"
       },
@@ -59,7 +59,7 @@
         "icon": "$(trash)"
       },
       {
-        "command": "extension.renameServer",
+        "command": "extension.edit",
         "title": "Rename SSH Server",
         "icon": "$(edit)"
       }
@@ -77,12 +77,7 @@
           "group": "navigation"
         },
         {
-          "command": "extension.openServerList",
-          "when": "view == sshServers",
-          "group": "navigation"
-        },
-        {
-          "command": "extension.openSettingsFile",
+          "command": "extension.openConfigFile",
           "when": "view == sshServers",
           "group": "navigation"
         }
@@ -99,7 +94,7 @@
           "group": "inline"
         },
         {
-          "command": "extension.renameServer",
+          "command": "extension.edit",
           "when": "view == sshServers",
           "group": "inline"
         }
