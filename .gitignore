@@ -3,7 +3,6 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-.vscode-test.mjs
-.vscode
+
 server.json
 servers.json
