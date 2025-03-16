@@ -17,9 +17,16 @@ export class SSHTreeProvider implements vscode.TreeDataProvider<ServerItem> {
         return element;
     }
 
-    getChildren (): ServerItem[] {
-        const list = loadServers(this.context).map(server => new ServerItem(server.name, server.connection));
-
+    getChildren (parent?: ServerItem): ServerItem[] {
+        console.log(parent);
+        if (parent) {
+            return parent.children;
+        }
+        let list = loadServers(this.context).map(server => new ServerItem(server.name, server.connection));
+        list.map((item: ServerItem) => {
+            return item.children = [new ServerItem("a", "b")];
+        });
+        console.log(list);
         return list;
     }
 
@@ -33,9 +40,10 @@ class ServerItem extends vscode.TreeItem {
     constructor(
         public readonly name: string,
         public readonly connection: string,
-        public readonly children: vscode.TreeItem[] = []
+        public children: ServerItem[] = []
     ) {
-        super(name, vscode.TreeItemCollapsibleState.None);
+
+        super(name, children && children.length >= 0 ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
         this.contextValue = 'server';  // 👈 각 서버가 "server"로 인식됨
         this.iconPath = new vscode.ThemeIcon('terminal');
         // this.command = {
@@ -43,6 +51,8 @@ class ServerItem extends vscode.TreeItem {
         //     title: 'Connect to SSH',
         //     arguments: [{ name, user, host }]
         // };
+
+
     }
 }
 

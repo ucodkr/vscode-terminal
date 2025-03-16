@@ -1,6 +1,6 @@
 {
-  "name": "code-terminal",
-  "displayName": "code-terminal",
+  "name": "vscode-terminal",
+  "displayName": "ssh terminal",
   "description": "Terminal Manager",
   "version": "0.0.1",
   "engines": {
