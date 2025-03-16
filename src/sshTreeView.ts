@@ -23,9 +23,7 @@ export class SSHTreeProvider implements vscode.TreeDataProvider<ServerItem> {
             return parent.children;
         }
         let list = loadServers(this.context).map(server => new ServerItem(server.name, server.connection));
-        list.map((item: ServerItem) => {
-            return item.children = [new ServerItem("a", "b")];
-        });
+
         console.log(list);
         return list;
     }
@@ -43,7 +41,11 @@ class ServerItem extends vscode.TreeItem {
         public children: ServerItem[] = []
     ) {
 
-        super(name, children && children.length >= 0 ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None);
+        super(name, vscode.TreeItemCollapsibleState.None);
+        if (children && children.length > 0) {
+            this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+        }
+
         this.contextValue = 'server';  // 👈 각 서버가 "server"로 인식됨
         this.iconPath = new vscode.ThemeIcon('terminal');
         // this.command = {
@@ -53,17 +55,5 @@ class ServerItem extends vscode.TreeItem {
         // };
 
 
-    }
-}
-
-// 그룹 아이템을 추가하기 위한 예시
-class GroupItem extends vscode.TreeItem {
-    constructor(
-        public readonly label: string,
-        public readonly children: vscode.TreeItem[] = []
-    ) {
-        super(label, vscode.TreeItemCollapsibleState.Collapsed);
-
-        this.iconPath = new vscode.ThemeIcon('terminal');
     }
 }
