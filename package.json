@@ -2,7 +2,7 @@
   "name": "code-terminal",
   "displayName": "ssh terminal",
   "description": "Terminal Manager",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "engines": {
     "vscode": "^1.98.0"
   },
