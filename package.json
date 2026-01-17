@@ -1,6 +1,6 @@
 {
   "name": "code-terminal",
-  "displayName": "ssh terminal in code",
+  "displayName": "ssh terminal extension",
   "description": "Terminal Manager",
   "version": "0.1.6",
   "engines": {
